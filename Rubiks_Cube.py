@@ -1,3 +1,7 @@
+"""
+Three dimensional GUI Rubiks cube that shuffles itself for you to solve.
+"""
+
 import simpleguitk
 import math
 import random
