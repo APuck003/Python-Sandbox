@@ -2,3 +2,5 @@
 
 #!/usr/bin/env python3
 import pyautogui
+
+print("Press Ctrl+C to quit.")
