@@ -39,3 +39,10 @@ def traverse_site(max_links=10):
         url = link_parser_singleton.queue_to_parse.pop()
 
         http = httplib2.Http()
+        
+        try:
+            status, response = http.request(url)
+        except Exception:
+            continue
+        
+        
