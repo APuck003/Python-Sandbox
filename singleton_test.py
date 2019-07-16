@@ -121,5 +121,27 @@ def download_images(thread_name):
             print(thread_name, 'finished downloading images from', url)
 
 
-            
+if __name__ == '__main__':
+    root = 'https://www.python.org'
+
+    parsed_root = urlparse(root)
+
+    singleton = Singleton()
+    singleton.queue_to_parse = [root]
+
+    # A set of urls to download images from
+    singleton.to_visit = set()
+
+    # Downloaded images
+    singleton.downloaded = set()
+
+    traverse_site()
+
+    # Create images directory if not exists
+    if not os.path.exists('images'):
+        os.makedirs('images')
+
+    # Create new threads
+    thread1 = ImageDownloaderThread(1, "Thread-1", 1)
+    thread2 = ImageDownloaderThread(2, "Thread-2", 2)
             
