@@ -78,3 +78,48 @@ def traverse_site(max_links=10):
 
             # Add a link for further parsing
             link_parser_singleton.queue_to_parse = [link_url] + link_parser_singleton.queue_to_parse
+
+            
+def download_images(thread_name):
+    singleton = Singleton()
+
+    # While we have pages to download images from
+    while singleton.to_visit:
+        url = singleton.to_visit.pop()
+
+        http = httplib2.Http()
+        print(thread_name, 'Commencing downloading images from', url)
+
+        # If page is unavailable, skip it
+        try:
+            status, response = http.request(url)
+        except Exception:
+            continue
+
+        bs = BeautifulSoup(response)
+
+        images = BeautifulSoup.findAll(bs, 'img')
+
+        for image in images:
+            # Get image source url which can be absolute or relative
+            src = image.get('src')
+
+            # Construct a full url. If the image url is relative, it will be prepended with webpage domain
+            # If the image url is absolute, it will remain as is
+            src = urljoin(url, src)
+
+            # Get a base name, for example 'image.png' to name file locally
+            basename = os.path.basename(src)
+
+            if src not in singleton.downloaded:
+                singleton.downloaded.add(src)
+                print('Downloading', src)
+
+                # Download image to local filesystem
+                urllib.request.urlretrieve(src, os.path.join('images', basename))
+
+            print(thread_name, 'finished downloading images from', url)
+
+
+            
+            
