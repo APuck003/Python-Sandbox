@@ -16,3 +16,9 @@ class Singleton(object):
     return cls.instance
 
 
+class ImageDownloaderThread(threading.Thread):
+  def __init__(self, thread_id, name, counter):
+    threading.Thread.__init__(self)
+    self.name = name
+  
+  
