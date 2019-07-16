@@ -46,3 +46,35 @@ def traverse_site(max_links=10):
             continue
         
         
+
+        # Skip if not a web page
+        if status.get('content-type') != 'text/html':
+            continue
+
+        # Add the link to queue for downloading images
+        link_parser_singleton.to_visit.add(url)
+        print('Added', url, 'to queue')
+
+        bs = BeautifulSoup(response)
+
+        for link in BeautifulSoup.findAll(bs, 'a'):
+            link_url = link.get('href')
+            # <img> tag may not contain href attribute
+            if not link_url:
+                continue
+
+            parsed = urlparse(link_url)
+
+            # If link follows to external webpage, skip it
+            if parsed.netloc and parsed.netloc != parsed_root.netloc:
+                continue
+
+            # Construct a full url from a link which can be relative
+            link_url = (parsed.scheme or parsed_root.scheme) + '://' + (parsed.netloc or parsed_root.netloc) + parsed.path or ''
+
+            # If link was added previously, skip it
+            if link_url in link_parser_singleton.to_visit:
+                continue
+
+            # Add a link for further parsing
+            link_parser_singleton.queue_to_parse = [link_url] + link_parser_singleton.queue_to_parse
