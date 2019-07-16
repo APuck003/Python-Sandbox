@@ -26,3 +26,16 @@ class ImageDownloaderThread(threading.Thread):
     download_images(self.name)
     print("Finished thread ", self.name)
 
+
+def traverse_site(max_links=10):
+    link_parser_singleton = Singleton()
+
+    # While we have pages to parse in queue
+    while link_parser_singleton.queue_to_parse:
+        # If collected enough links to download images, return
+        if len(link_parser_singleton.to_visit) == max_links:
+            return
+
+        url = link_parser_singleton.queue_to_parse.pop()
+
+        http = httplib2.Http()
