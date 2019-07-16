@@ -21,4 +21,8 @@ class ImageDownloaderThread(threading.Thread):
     threading.Thread.__init__(self)
     self.name = name
   
-  
+  def run(self):
+    print("Starting thread ", self.name)
+    download_images(self.name)
+    print("Finished thread ", self.name)
+
